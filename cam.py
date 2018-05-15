@@ -89,7 +89,7 @@ class Button:
 	  self.fg       = None # Foreground Icon name
 	  self.callback = None # Callback function
 	  self.value    = None # Value passed to callback
-	  for key, value in kwargs.iteritems():
+	  for key, value in kwargs.items():
 	    if   key == 'color': self.color    = value
 	    elif key == 'bg'   : self.bg       = value
 	    elif key == 'fg'   : self.fg       = value
