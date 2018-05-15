@@ -581,6 +581,7 @@ atexit.register(camera.close)
 camera.resolution = sizeData[sizeMode][1]
 #camera.crop       = sizeData[sizeMode][2]
 camera.crop       = (0.0, 0.0, 1.0, 1.0)
+camera.vflip = True
 # Leave raw format at default YUV, don't touch, don't set to RGB!
 
 # Load all icons at startup.
