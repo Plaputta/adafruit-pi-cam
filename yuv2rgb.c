@@ -9,7 +9,7 @@
    Written by Phil Burgess / Paint Your Dragon for Adafruit Industries.
    BSD license, all text above must be included in any redistribution. */
 
-#include <python2.7/Python.h>
+#include <Python.h>
 
 static PyObject *convert(PyObject *self, PyObject *args) {
 	Py_buffer      inBuf, outBuf;
@@ -67,12 +67,16 @@ static PyObject *convert(PyObject *self, PyObject *args) {
 	return Py_None;
 }
 
-static PyMethodDef yuv2rgb_methods[] = {
-	{"convert", convert, METH_VARARGS},
-	{NULL,NULL}
+static struct PyModuleDef yuv2rgb =
+{
+    PyModuleDef_HEAD_INIT,
+    "yuv2rgb", /* name of module */
+    "",          /* module documentation, may be NULL */
+    -1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    yuv2rgb_methods
 };
 
-PyMODINIT_FUNC inityuv2rgb(void) {
-	(void)Py_InitModule("yuv2rgb", yuv2rgb_methods);
+PyMODINIT_FUNC PyInit_yuv2rgb(void)
+{
+    return PyModule_Create(&yuv2rgb);
 }
-
