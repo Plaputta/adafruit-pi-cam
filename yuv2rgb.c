@@ -67,6 +67,11 @@ static PyObject *convert(PyObject *self, PyObject *args) {
 	return Py_None;
 }
 
+static PyMethodDef yuv2rgb_methods[] = {
+	{"convert", convert, METH_VARARGS},
+	{NULL,NULL}
+};
+
 static struct PyModuleDef yuv2rgb =
 {
     PyModuleDef_HEAD_INIT,
