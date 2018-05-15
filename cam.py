@@ -566,7 +566,7 @@ gid = int(s) if s else os.getgid()
 
 # Buffers for viewfinder data
 rgb = bytearray(800 * 480 * 3)
-yuv = bytearray(800 * 480 * 3 / 2)
+yuv = bytearray(576000) #800 * 480 * 3 / 2
 
 # Init pygame and screen
 pygame.init()
