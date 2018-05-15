@@ -223,14 +223,11 @@ def spinner():
 	busy = True
 	n    = 0
 	while busy is True:
-	  buttons[screenMode][4].setBg('work-' + str(n))
-	  buttons[screenMode][4].draw(screen)
 	  pygame.display.update()
 	  n = (n + 1) % 5
 	  time.sleep(0.15)
 
 	buttons[screenMode][3].setBg(None)
-	buttons[screenMode][4].setBg(None)
 	screenModePrior = -1 # Force refresh
 
 def takePicture():
