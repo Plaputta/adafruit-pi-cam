@@ -78,8 +78,8 @@ class Button:
 def settingCallback(n): # Pass 1 (next setting) or -1 (prev setting)
 	global screenMode
 	screenMode += n
-	if screenMode < 4:               screenMode = len(buttons) - 1
-	elif screenMode >= len(buttons): screenMode = 4
+	if screenMode < 3:               screenMode = len(buttons) - 1
+	elif screenMode >= len(buttons): screenMode = 3
 
 def viewCallback(n): # Viewfinder buttons
 	global loadIdx, scaled, screenMode, screenModePrior, settingMode, storeMode
