@@ -23,7 +23,7 @@
 # BSD license, all text above must be included in any redistribution.
 
 import atexit
-import cPickle as pickle
+import pickle
 import errno
 import fnmatch
 import io
