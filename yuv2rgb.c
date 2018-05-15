@@ -9,7 +9,7 @@
    Written by Phil Burgess / Paint Your Dragon for Adafruit Industries.
    BSD license, all text above must be included in any redistribution. */
 
-#include <Python.h>
+#include <python3.4/Python.h>
 
 static PyObject *convert(PyObject *self, PyObject *args) {
 	Py_buffer      inBuf, outBuf;
