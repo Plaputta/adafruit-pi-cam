@@ -35,8 +35,11 @@ import stat
 import threading
 import time
 import yuv2rgb
+import ft5406
 from pygame.locals import *
-from subprocess import call  
+from subprocess import call
+
+
 
 
 # UI classes ---------------------------------------------------------------
@@ -93,13 +96,13 @@ class Button:
 	    elif key == 'cb'   : self.callback = value
 	    elif key == 'value': self.value    = value
 
-	def selected(self, pos):
+	def selected(self, x, y):
 	  x1 = self.rect[0]
 	  y1 = self.rect[1]
 	  x2 = x1 + self.rect[2] - 1
 	  y2 = y1 + self.rect[3] - 1
-	  if ((pos[0] >= x1) and (pos[0] <= x2) and
-	      (pos[1] >= y1) and (pos[1] <= y2)):
+	  if ((x >= x1) and (x <= x2) and
+	      (y >= y1) and (y <= y2)):
 	    if self.callback:
 	      if self.value is None: self.callback()
 	      else:                  self.callback(self.value)
@@ -544,6 +547,10 @@ def showImage(n):
 	screenModePrior = -1 # Force screen refresh
 
 
+def Kill(channel):
+  os.system("sudo pkill gvfs")
+  pygame.quit()
+
 # Initialization -----------------------------------------------------------
 
 # Init framebuffer/touchscreen environment variables
@@ -566,6 +573,7 @@ pygame.init()
 screen = pygame.display.set_mode((800,480),pygame.FULLSCREEN)
 pygame.mouse.set_visible(True)
 
+ts = ft5406.Touchscreen()
 
 # Init camera and set up default values
 camera            = picamera.PiCamera()
@@ -601,10 +609,12 @@ while(True):
   # Process touchscreen input
   while True:
     for event in pygame.event.get():
-      if(event.type is MOUSEBUTTONDOWN):
-        pos = pygame.mouse.get_pos()
+      if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+          Kill(0)
+    for touch in ts.poll():
+      if touch.valid:
         for b in buttons[screenMode]:
-          if b.selected(pos): break
+          if b.selected(touch.x, touch.y): break
     # If in viewfinder or settings modes, stop processing touchscreen
     # and refresh the display to show the live preview.  In other modes
     # (image playback, etc.), stop and refresh the screen only when
