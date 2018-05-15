@@ -450,7 +450,7 @@ def takePicture():
 	      stat.S_IROTH | stat.S_IXOTH)
 	  except OSError as e:
 	    # errno = 2 if can't create folder
-	    print errno.errorcode[e.errno]
+	    print(errno.errorcode[e.errno])
 	    return
 
 	# If this is the first time accessing this directory,
