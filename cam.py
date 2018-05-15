@@ -571,7 +571,7 @@ yuv = bytearray(576000) #800 * 480 * 3 / 2
 # Init pygame and screen
 pygame.init()
 screen = pygame.display.set_mode((800,480),pygame.FULLSCREEN)
-pygame.mouse.set_visible(True)
+pygame.mouse.set_visible(False)
 
 ts = ft5406.Touchscreen()
 
