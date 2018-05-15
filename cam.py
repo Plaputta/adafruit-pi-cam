@@ -188,16 +188,8 @@ buttons = [
    Button((164,188,156, 52), bg='play', cb=viewCallback, value=1),
    Button((  0,  0,320,240)           , cb=viewCallback, value=2),
    Button(( 88, 51,157,102)),  # 'Working' label (when enabled)
-   Button((148, 110,22, 22))], # Spinner (when enabled)
+   Button((148, 110,22, 22))] # Spinner (when enabled)
 
-  # Remaining screens are settings modes
-
-  # Screen mode 8 is quit confirmation
-  [Button((  0,188,320, 52), bg='done'   , cb=doneCallback),
-   Button((  0,  0, 80, 52), bg='prev'   , cb=settingCallback, value=-1),
-   Button((240,  0, 80, 52), bg='next'   , cb=settingCallback, value= 1),
-   Button((110, 60,100,120), bg='quit-ok', cb=quitCallback),
-   Button((  0, 10,320, 35), bg='quit')]
 ]
 
 
