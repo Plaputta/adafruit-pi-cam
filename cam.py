@@ -387,9 +387,6 @@ def touch_handler(event, touch):
     if touch.valid:
       queuedTouch = [touch.x, touch.y]
 
-      #for b in buttons[screenMode]:
-      #  if b.selected(touch.x, touch.y): break
-
 for touch in ts.touches:
   touch.on_press = touch_handler
   touch.on_release = touch_handler
@@ -418,13 +415,8 @@ while True:
 
       if queuedTouch[0] >= 0:
         processingTouch = True
-        time.sleep(0.5)
-        textsurface = myfont.render('Some Text', False, (255, 255, 255))
-        screen.fill(0)
-        screen.blit(textsurface, (0, 0))
-        pygame.display.update()
-        time.sleep(2.5)
-        queuedTouch = [-1,-1]
+        for b in buttons[screenMode]:
+         if b.selected(queuedTouch[0], queuedTouch[1]): break
         processingTouch = False
 
 
