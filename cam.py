@@ -404,8 +404,10 @@ global processingTouch, queuedTouch
 processingTouch = False
 queuedTouch = [-1,-1]
 
-while True:
-    # Redraw Code etc
+while(True):
+
+  # Process touchscreen input
+  while True:
     for event in pygame.event.get():
       if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
         ts.stop()
@@ -416,37 +418,45 @@ while True:
       for b in buttons[screenMode]:
        if b.selected(queuedTouch[0], queuedTouch[1]): break
       processingTouch = False
+    # If in viewfinder or settings modes, stop processing touchscreen
+    # and refresh the display to show the live preview.  In other modes
+    # (image playback, etc.), stop and refresh the screen only when
+    # screenMode changes.
+    if screenMode >= 3 or screenMode != screenModePrior: break
 
+  # Refresh display
+  if screenMode >= 3: # Viewfinder or settings modes
+    stream = io.BytesIO() # Capture into in-memory stream
+    camera.capture(stream, use_video_port=True, format='raw')
+    stream.seek(0)
+    stream.readinto(yuv)  # stream -> YUV buffer
+    stream.close()
+    yuv2rgb.convert(yuv, rgb, sizeData[sizeMode][1][0],
+      sizeData[sizeMode][1][1])
+    img = pygame.image.frombuffer(rgb[0:
+      (sizeData[sizeMode][1][0] * sizeData[sizeMode][1][1] * 3)],
+      sizeData[sizeMode][1], 'RGB')
+  elif screenMode < 2: # Playback mode or delete confirmation
+    img = scaled       # Show last-loaded image
+  else:                # 'No Photos' mode
+    img = None         # You get nothing, good day sir
 
-    if screenMode == 3:  # Viewfinder mode
-      stream = io.BytesIO()  # Capture into in-memory stream
-      camera.capture(stream, use_video_port=True, format='raw')
-      stream.seek(0)
-      stream.readinto(yuv)  # stream -> YUV buffer
-      stream.close()
-      yuv2rgb.convert(yuv, rgb, sizeData[sizeMode][1][0],
-                      sizeData[sizeMode][1][1])
-      img = pygame.image.frombuffer(rgb[0:
-                                        (sizeData[sizeMode][1][0] * sizeData[sizeMode][1][1] * 3)],
-                                    sizeData[sizeMode][1], 'RGB')
-    elif screenMode < 2:  # Playback mode or delete confirmation
-      img = scaled  # Show last-loaded image
-    else:  # 'No Photos' mode
-      img = None  # You get nothing, good day sir
+  if img is None or img.get_height() < 480:  # Letterbox, clear background
+    screen.fill(0)
+  if img:
+    screen.blit(img,
+                ((800 - img.get_width()) / 2,
+                 (480 - img.get_height()) / 2))
 
-    if img is None or img.get_height() < 480:  # Letterbox, clear background
-      screen.fill(0)
-    if img:
-      screen.blit(img,
-                  ((800 - img.get_width()) / 2,
-                   (480 - img.get_height()) / 2))
+  # Overlay buttons on display and update
+  for i,b in enumerate(buttons[screenMode]):
+    b.draw(screen)
+  pygame.display.update()
 
-    for i, b in enumerate(buttons[screenMode]):
-      b.draw(screen)
-    pygame.display.update()
+  screenModePrior = screenMode
 
-    try:
-        pass
-    except KeyboardInterrupt:
-        ts.stop()
-        Kill(0)
+  try:
+    pass
+  except KeyboardInterrupt:
+    ts.stop()
+    Kill(0)
