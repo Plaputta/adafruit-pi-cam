@@ -385,6 +385,8 @@ def touch_handler(event, touch):
     if touch.valid:
       textsurface = myfont.render('Some Text', False, (0, 0, 0))
       screen.blit(textsurface, (0, 0))
+      pygame.display.update()
+      time.sleep(2.5)
       #for b in buttons[screenMode]:
       #  if b.selected(touch.x, touch.y): break
 
