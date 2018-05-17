@@ -75,12 +75,6 @@ class Button:
 	        self.iconBg = i
 	        break
 
-def settingCallback(n): # Pass 1 (next setting) or -1 (prev setting)
-	global screenMode
-	screenMode += n
-	if screenMode < 3:               screenMode = len(buttons) - 1
-	elif screenMode >= len(buttons): screenMode = 3
-
 def viewCallback(n): # Viewfinder buttons
 	global loadIdx, scaled, screenMode, screenModePrior, settingMode, storeMode
 
@@ -130,7 +124,7 @@ def deleteCallback(n): # Delete confirmation
 
 screenMode      =  3      # Current screen mode; default = viewfinder
 screenModePrior = -1      # Prior screen mode (for detecting changes)
-settingMode     =  4      # Last-used settings mode (default = storage)
+settingMode     =  0      # Last-used settings mode (default = storage)
 storeMode       =  0      # Storage mode; default = Photos folder
 storeModePrior  = -1      # Prior storage mode (for detecting changes)
 sizeMode        =  0      # Image size; default = Large
@@ -280,12 +274,6 @@ def takePicture():
 	    stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
 	  img    = pygame.image.load(filename)
 	  scaled = pygame.transform.scale(img, sizeData[sizeMode][1])
-	  if storeMode == 2: # Dropbox
-	    if upconfig:
-	      cmd = uploader + ' -f ' + upconfig + ' upload ' + filename + ' Photos/' + os.path.basename(filename)
-	    else:
-	      cmd = uploader + ' upload ' + filename + ' Photos/' + os.path.basename(filename)
-	    call ([cmd], shell=True)
 
 	finally:
 	  # Add error handling/indicator (disk full, etc.)
