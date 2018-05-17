@@ -317,11 +317,13 @@ def showImage(n):
 
   t = threading.Thread(target=spinner)
   t.start()
-
-  img      = pygame.image.load(
-              pathData[storeMode] + '/IMG_' + '%04d' % n + '.JPG')
-  scaled   = pygame.transform.scale(img, sizeData[sizeMode][1])
-  loadIdx  = n
+  loadIdx = n
+  try:
+    img      = pygame.image.load(
+                pathData[storeMode] + '/IMG_' + '%04d' % loadIdx + '.JPG')
+    scaled   = pygame.transform.scale(img, sizeData[sizeMode][1])
+  except:
+    deleteCallback(True)
 
   busy = False
   t.join()
