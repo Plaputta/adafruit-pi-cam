@@ -385,7 +385,8 @@ def touch_handler(event, touch):
   if event == TS_PRESS:
     if touch.valid:
       blub = True
-      textsurface = myfont.render('Some Text', False, (0, 0, 0))
+      textsurface = myfont.render('Some Text', False, (255, 255, 255))
+      screen.fill(0)
       screen.blit(textsurface, (0, 0))
       pygame.display.update()
       time.sleep(2.5)
@@ -405,6 +406,8 @@ pygame.font.init() # you have to call this at the start,
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
 # Main loop ----------------------------------------------------------------
+
+blub = False
 
 while True:
     # Redraw Code etc
