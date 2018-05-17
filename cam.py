@@ -216,11 +216,9 @@ def spinner():
   pygame.display.update()
 
   busy = True
-  n    = 0
   while busy is True:
     pygame.display.update()
-    n = (n + 1) % 5
-    time.sleep(0.15)
+    time.sleep(0.5)
 
   buttons[screenMode][3].setBg(None)
   screenModePrior = -1 # Force refresh
