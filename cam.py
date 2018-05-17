@@ -352,7 +352,7 @@ pygame.init()
 screen = pygame.display.set_mode((800,480),pygame.FULLSCREEN)
 pygame.mouse.set_visible(False)
 
-ts = ft5406.Touchscreen()
+ts = Touchscreen()
 
 # Init camera and set up default values
 camera            = picamera.PiCamera()
