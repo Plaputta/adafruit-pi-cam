@@ -178,8 +178,8 @@ buttons = [
    Button((0, 53,320, 80), bg='empty')],     # 'Empty' message
 
   # Screen mode 3 is viewfinder / snapshot
-  [Button((  0,428,156, 52), bg='gear', cb=viewCallback, value=0),
-   Button((644,428,156, 52), bg='play', cb=viewCallback, value=1),
+  [Button((  20,408,156, 52), bg='gear', cb=viewCallback, value=0),
+   Button((624,408,156, 52), bg='play', cb=viewCallback, value=1),
    Button((  0,  0,320,240)           , cb=viewCallback, value=2),
    Button(( 88, 51,157,102)),  # 'Working' label (when enabled)
    Button((148, 110,22, 22))] # Spinner (when enabled)
