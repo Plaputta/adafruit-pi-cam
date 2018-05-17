@@ -82,8 +82,6 @@ def viewCallback(n): # Viewfinder buttons
     takePicture()
   elif n is 1: # Play icon (image playback)
     if scaled: # Last photo is already memory-resident
-      print("mode S")
-      Kill(0)
       loadIdx         = saveIdx
       screenMode      =  0 # Image playback
       screenModePrior = -1 # Force screen refresh
