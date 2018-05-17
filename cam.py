@@ -79,7 +79,7 @@ def viewCallback(n): # Viewfinder buttons
 	global loadIdx, scaled, screenMode, screenModePrior, settingMode, storeMode
 
 	if n is 0:   # Gear icon (settings)
-	  screenMode = settingMode # Switch to last settings mode
+	  takePicture()
 	elif n is 1: # Play icon (image playback)
 	  if scaled: # Last photo is already memory-resident
 	    loadIdx         = saveIdx
@@ -89,8 +89,6 @@ def viewCallback(n): # Viewfinder buttons
 	    r = imgRange(pathData[storeMode])
 	    if r: showImage(r[1]) # Show last image in directory
 	    else: screenMode = 2  # No images
-	else: # Rest of screen = shutter
-	  takePicture()
 
 def doneCallback(): # Exit settings
 	global screenMode, settingMode
@@ -158,12 +156,12 @@ icons = [] # This list gets populated at startup
 
 buttons = [
   # Screen mode 0 is photo playback
-  [Button((  1,428,400, 52), bg='done' , cb=doneCallback),
-   Button((  0,  0, 80, 52), bg='prev' , cb=imageCallback, value=-1),
-   Button((720,  0, 80, 52), bg='next' , cb=imageCallback, value= 1),
-   Button(( 88, 70,157,102)), # 'Working' label (when enabled)
-   Button((148,129, 22, 22)), # Spinner (when enabled)
-   Button((361,  0, 78, 52), bg='trash', cb=imageCallback, value= 0)],
+  [Button((  200,408,400, 52), bg='done' , cb=doneCallback),
+   Button((  20,  20, 80, 52), bg='prev' , cb=imageCallback, value=-1),
+   Button((700,  20, 80, 52), bg='next' , cb=imageCallback, value= 1),
+   Button(( 322, 189,157,102)), # 'Working' label (when enabled)
+   Button((389,229, 22, 22)), # Spinner (when enabled)
+   Button((361,  20, 78, 52), bg='trash', cb=imageCallback, value= 0)],
 
   # Screen mode 1 is delete confirmation
   [Button((  0,35,320, 33), bg='delete'),
@@ -180,7 +178,6 @@ buttons = [
   # Screen mode 3 is viewfinder / snapshot
   [Button((  20,408,156, 52), bg='gear', cb=viewCallback, value=0),
    Button((624,408,156, 52), bg='play', cb=viewCallback, value=1),
-   Button((  0,  0,320,240)           , cb=viewCallback, value=2),
    Button(( 88, 51,157,102)),  # 'Working' label (when enabled)
    Button((148, 110,22, 22))] # Spinner (when enabled)
 
@@ -392,10 +389,16 @@ while(True):
     for event in pygame.event.get():
       if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
           Kill(0)
+    processedTouch = False
     for touch in ts.poll():
       if touch.valid:
         for b in buttons[screenMode]:
-          if b.selected(touch.x, touch.y): break
+          if b.selected(touch.x, touch.y):
+            processedTouch = True
+            break
+      if processedTouch:
+        break
+
     # If in viewfinder or settings modes, stop processing touchscreen
     # and refresh the display to show the live preview.  In other modes
     # (image playback, etc.), stop and refresh the screen only when
