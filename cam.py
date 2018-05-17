@@ -82,6 +82,8 @@ def viewCallback(n): # Viewfinder buttons
     takePicture()
   elif n is 1: # Play icon (image playback)
     if scaled: # Last photo is already memory-resident
+      print("mode S")
+      Kill(0)
       loadIdx         = saveIdx
       screenMode      =  0 # Image playback
       screenModePrior = -1 # Force screen refresh
@@ -198,6 +200,8 @@ buttons = [
 # software's convention (IMG_XXXX.JPG), returning a tuple with the
 # lowest and highest indices (or None if no matching files).
 def imgRange(path):
+  print("mode I")
+  Kill(0)
   min = 9999
   max = 0
   try:
