@@ -5,7 +5,7 @@ if [ "$EUID" -ne 0 ]
 fi
 
 if [ -z "$STY" ]; then exec screen -dm -S gruntScreen /bin/bash "$0"; fi
-cd /home/pi/photobooth/
+cd /home/pi/adafruit-pi-cam/
 
 while true; do
     echo "Running Hochzeitsblitzer in 3s..."
