@@ -399,17 +399,17 @@ ts.run()
 while(True):
 
   # Process touchscreen input
-  while True:
-    for event in pygame.event.get():
-      if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-          ts.stop()
-          Kill(0)
+  #while True:
+  for event in pygame.event.get():
+    if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+        ts.stop()
+        Kill(0)
 
     # If in viewfinder or settings modes, stop processing touchscreen
     # and refresh the display to show the live preview.  In other modes
     # (image playback, etc.), stop and refresh the screen only when
     # screenMode changes.
-    if screenMode >= 3 or screenMode != screenModePrior: break
+    #if screenMode >= 3 or screenMode != screenModePrior: break
 
   # Refresh display
   if screenMode >= 3: # Viewfinder or settings modes
