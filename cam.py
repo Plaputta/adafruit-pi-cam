@@ -12,6 +12,8 @@ import time
 import yuv2rgb
 from ft5406 import Touchscreen, TS_PRESS, TS_RELEASE, TS_MOVE
 from pygame.locals import *
+import RPi.GPIO as GPIO
+import subprocess
 
 
 class Icon:
@@ -74,6 +76,43 @@ class Button:
         if name == i.name:
           self.iconBg = i
           break
+
+  def Shutdown(channel):
+    GPIO.cleanup()
+    os.system("shutdown -h now")
+    pygame.quit()
+
+
+def GetPictureFromCamera(picture_name, original_dir):
+  camera_proc = subprocess.Popen(
+    ['gphoto2', '--capture-image-and-download', '--filename', original_dir + picture_name, '--force-overwrite',
+     '--keep'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
+
+  camera_returncode = None
+  while camera_returncode is None:
+    camera_returncode = camera_proc.poll()
+    if os.path.isfile(original_dir + picture_name):
+      # camera has placed picture earlier than process finished
+      return True
+    sleep(0.01)
+
+  if (camera_returncode != 0):
+    # communication unsuccessful
+    return False
+
+  if not os.path.isfile(original_dir + picture_name):
+    # error
+    return False
+
+  return True
+
+
+def CreateWebImages(picture_name, original_dir, web_img_dir, web_thumbnail_dir):
+  subprocess.Popen(['convert', '-thumbnail', '1920', original_dir + picture_name, web_img_dir + picture_name],
+                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
+  subprocess.Popen(['convert', '-thumbnail', '800x480^', '-extent', '800x480', original_dir + picture_name,
+                    web_thumbnail_dir + picture_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
+
 
 def viewCallback(n): # Viewfinder buttons
   global loadIdx, scaled, screenMode, screenModePrior, settingMode, storeMode
@@ -329,9 +368,15 @@ def showImage(n):
   screenMode      =  0 # Photo playback
   screenModePrior = -1 # Force screen refresh
 
+def TriggerPressed(channel):
+  global processingTouch, queuedTouch
+  if processingTouch: return
+  queuedTouch = [21, 409]
+
 
 def Kill(channel):
   os.system("sudo pkill gvfs")
+  GPIO.cleanup()
   pygame.quit()
 
 # Initialization -----------------------------------------------------------
@@ -408,60 +453,68 @@ global processingTouch, queuedTouch
 processingTouch = False
 queuedTouch = [-1,-1]
 
-while True:
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(24,GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.add_event_detect(24,GPIO.RISING,callback=TriggerPressed,bouncetime=2000)
 
-  # Process touchscreen input
+try:
   while True:
-    for event in pygame.event.get():
-      if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-        ts.stop()
-        Kill(0)
 
-    if queuedTouch[0] >= 0:
-      processingTouch = True
-      for b in buttons[screenMode]:
-       if b.selected(queuedTouch[0], queuedTouch[1]): break
-      queuedTouch = [-1, -1]
-      processingTouch = False
-    # If in viewfinder or settings modes, stop processing touchscreen
-    # and refresh the display to show the live preview.  In other modes
-    # (image playback, etc.), stop and refresh the screen only when
-    # screenMode changes.
-    if screenMode >= 3 or screenMode != screenModePrior: break
+    # Process touchscreen input
+    while True:
+      for event in pygame.event.get():
+        if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+          ts.stop()
+          Kill(0)
 
-  # Refresh display
-  if screenMode >= 3: # Viewfinder or settings modes
-    stream = io.BytesIO() # Capture into in-memory stream
-    camera.capture(stream, use_video_port=True, format='raw')
-    stream.seek(0)
-    stream.readinto(yuv)  # stream -> YUV buffer
-    stream.close()
-    yuv2rgb.convert(yuv, rgb, sizeData[sizeMode][1][0],
-      sizeData[sizeMode][1][1])
-    img = pygame.image.frombuffer(rgb[0:
-      (sizeData[sizeMode][1][0] * sizeData[sizeMode][1][1] * 3)],
-      sizeData[sizeMode][1], 'RGB')
-  elif screenMode < 2: # Playback mode or delete confirmation
-    img = scaled       # Show last-loaded image
-  else:                # 'No Photos' mode
-    img = None         # You get nothing, good day sir
+      if queuedTouch[0] >= 0:
+        processingTouch = True
+        for b in buttons[screenMode]:
+         if b.selected(queuedTouch[0], queuedTouch[1]): break
+        queuedTouch = [-1, -1]
+        processingTouch = False
+      # If in viewfinder or settings modes, stop processing touchscreen
+      # and refresh the display to show the live preview.  In other modes
+      # (image playback, etc.), stop and refresh the screen only when
+      # screenMode changes.
+      if screenMode >= 3 or screenMode != screenModePrior: break
 
-  if img is None or img.get_height() < 480:  # Letterbox, clear background
-    screen.fill(0)
-  if img:
-    screen.blit(img,
-                ((800 - img.get_width()) / 2,
-                 (480 - img.get_height()) / 2))
+    # Refresh display
+    if screenMode >= 3: # Viewfinder or settings modes
+      stream = io.BytesIO() # Capture into in-memory stream
+      camera.capture(stream, use_video_port=True, format='raw')
+      stream.seek(0)
+      stream.readinto(yuv)  # stream -> YUV buffer
+      stream.close()
+      yuv2rgb.convert(yuv, rgb, sizeData[sizeMode][1][0],
+        sizeData[sizeMode][1][1])
+      img = pygame.image.frombuffer(rgb[0:
+        (sizeData[sizeMode][1][0] * sizeData[sizeMode][1][1] * 3)],
+        sizeData[sizeMode][1], 'RGB')
+    elif screenMode < 2: # Playback mode or delete confirmation
+      img = scaled       # Show last-loaded image
+    else:                # 'No Photos' mode
+      img = None         # You get nothing, good day sir
 
-  # Overlay buttons on display and update
-  for i,b in enumerate(buttons[screenMode]):
-    b.draw(screen)
-  pygame.display.update()
+    if img is None or img.get_height() < 480:  # Letterbox, clear background
+      screen.fill(0)
+    if img:
+      screen.blit(img,
+                  ((800 - img.get_width()) / 2,
+                   (480 - img.get_height()) / 2))
 
-  screenModePrior = screenMode
+    # Overlay buttons on display and update
+    for i,b in enumerate(buttons[screenMode]):
+      b.draw(screen)
+    pygame.display.update()
 
-  try:
-    pass
-  except KeyboardInterrupt:
-    ts.stop()
-    Kill(0)
+    screenModePrior = screenMode
+
+    try:
+      pass
+    except KeyboardInterrupt:
+      ts.stop()
+      Kill(0)
+except:
+  print("Error")
+  Kill(0)
