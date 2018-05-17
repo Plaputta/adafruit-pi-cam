@@ -158,7 +158,7 @@ icons = [] # This list gets populated at startup
 
 buttons = [
   # Screen mode 0 is photo playback
-  [Button((  0,428,400, 52), bg='done' , cb=doneCallback),
+  [Button((  1,428,400, 52), bg='done' , cb=doneCallback),
    Button((  0,  0, 80, 52), bg='prev' , cb=imageCallback, value=-1),
    Button((720,  0, 80, 52), bg='next' , cb=imageCallback, value= 1),
    Button(( 88, 70,157,102)), # 'Working' label (when enabled)
@@ -178,8 +178,8 @@ buttons = [
    Button((0, 53,320, 80), bg='empty')],     # 'Empty' message
 
   # Screen mode 3 is viewfinder / snapshot
-  [Button((  0,188,156, 52), bg='gear', cb=viewCallback, value=0),
-   Button((164,188,156, 52), bg='play', cb=viewCallback, value=1),
+  [Button((  0,428,156, 52), bg='gear', cb=viewCallback, value=0),
+   Button((644,428,156, 52), bg='play', cb=viewCallback, value=1),
    Button((  0,  0,320,240)           , cb=viewCallback, value=2),
    Button(( 88, 51,157,102)),  # 'Working' label (when enabled)
    Button((148, 110,22, 22))] # Spinner (when enabled)
