@@ -209,10 +209,6 @@ def imgRange(path):
         if(i < min): min = i
         if(i > max): max = i
   finally:
-    print("mode I")
-    print(min)
-    print(max)
-    Kill(0)
     return None if min > max else (min, max)
 
 # Busy indicator.  To use, run in separate thread, set global 'busy'
