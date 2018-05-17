@@ -381,17 +381,12 @@ for s in buttons:        # For each screenful of buttons...
 
 
 def touch_handler(event, touch):
-  global processingTouch
+  global processingTouch, queuedTouch
+  if processingTouch: return
   if event == TS_PRESS:
     if touch.valid:
-      processingTouch = True
-      time.sleep(0.5)
-      textsurface = myfont.render('Some Text', False, (255, 255, 255))
-      screen.fill(0)
-      screen.blit(textsurface, (0, 0))
-      pygame.display.update()
-      time.sleep(2.5)
-      processingTouch = False
+      queuedTouch = [touch.x, touch.y]
+
       #for b in buttons[screenMode]:
       #  if b.selected(touch.x, touch.y): break
 
@@ -407,9 +402,10 @@ pygame.font.init() # you have to call this at the start,
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
 # Main loop ----------------------------------------------------------------
-global processingTouch
+global processingTouch, queuedTouch
 
 processingTouch = False
+queuedTouch = [-1,-1]
 
 while True:
     # Redraw Code etc
@@ -419,6 +415,18 @@ while True:
         Kill(0)
 
     if not processingTouch:
+
+      if queuedTouch[0] >= 0:
+        processingTouch = True
+        time.sleep(0.5)
+        textsurface = myfont.render('Some Text', False, (255, 255, 255))
+        screen.fill(0)
+        screen.blit(textsurface, (0, 0))
+        pygame.display.update()
+        time.sleep(2.5)
+        queuedTouch = [-1,-1]
+        processingTouch = False
+
 
       if screenMode == 3:  # Viewfinder mode
         stream = io.BytesIO()  # Capture into in-memory stream
