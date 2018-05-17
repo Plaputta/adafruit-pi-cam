@@ -384,14 +384,14 @@ def touch_handler(event, touch):
   global processingTouch
   if event == TS_PRESS:
     if touch.valid:
-      blub = True
+      processingTouch = True
       time.sleep(0.5)
       textsurface = myfont.render('Some Text', False, (255, 255, 255))
       screen.fill(0)
       screen.blit(textsurface, (0, 0))
       pygame.display.update()
       time.sleep(2.5)
-      blub = False
+      processingTouch = False
       #for b in buttons[screenMode]:
       #  if b.selected(touch.x, touch.y): break
 
