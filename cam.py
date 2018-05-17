@@ -381,12 +381,15 @@ for s in buttons:        # For each screenful of buttons...
 
 
 def touch_handler(event, touch):
+  global blub
   if event == TS_PRESS:
     if touch.valid:
+      blub = True
       textsurface = myfont.render('Some Text', False, (0, 0, 0))
       screen.blit(textsurface, (0, 0))
       pygame.display.update()
       time.sleep(2.5)
+      blub = False
       #for b in buttons[screenMode]:
       #  if b.selected(touch.x, touch.y): break
 
@@ -409,6 +412,8 @@ while True:
       if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
         ts.stop()
         Kill(0)
+
+    if blub: continue
 
     stream = io.BytesIO()  # Capture into in-memory stream
     camera.capture(stream, use_video_port=True, format='raw')
