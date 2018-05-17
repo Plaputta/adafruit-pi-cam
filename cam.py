@@ -87,14 +87,11 @@ def viewCallback(n): # Viewfinder buttons
       screenModePrior = -1 # Force screen refresh
     else:      # Load image
       r = imgRange(pathData[storeMode])
-      print("mode X")
-      Kill(0)
       if r:
         showImage(r[1])  # Show last image in directory
       else:
         screenMode = 2  # No images
-        print("mode 2")
-        Kill(0)
+        screenModePrior = -1  # Force screen refresh
 
 
 def doneCallback(): # Exit settings
