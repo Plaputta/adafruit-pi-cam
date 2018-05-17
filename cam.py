@@ -164,10 +164,10 @@ buttons = [
    Button((361,  20, 78, 52), bg='trash', cb=imageCallback, value= 0)],
 
   # Screen mode 1 is delete confirmation
-  [Button((  0,35,320, 33), bg='delete'),
-   Button(( 32,86,120,100), bg='yn', fg='yes',
+  [Button((  0,140,800, 33), bg='delete'),
+   Button(( 336,190,120,100), bg='yn', fg='yes',
     cb=deleteCallback, value=True),
-   Button((168,86,120,100), bg='yn', fg='no',
+   Button((464,190,120,100), bg='yn', fg='no',
     cb=deleteCallback, value=False)],
 
   # Screen mode 2 is 'No Images'
@@ -178,8 +178,8 @@ buttons = [
   # Screen mode 3 is viewfinder / snapshot
   [Button((  20,408,156, 52), bg='gear', cb=viewCallback, value=0),
    Button((624,408,156, 52), bg='play', cb=viewCallback, value=1),
-   Button(( 88, 51,157,102)),  # 'Working' label (when enabled)
-   Button((148, 110,22, 22))] # Spinner (when enabled)
+   Button((322, 189, 157, 102)),  # 'Working' label (when enabled)
+   Button((389, 229, 22, 22)),  # Spinner (when enabled)
 
 ]
 
