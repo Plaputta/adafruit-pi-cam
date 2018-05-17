@@ -95,7 +95,7 @@ def GetPictureFromCamera(picture_name, original_dir):
     if os.path.isfile(original_dir + picture_name):
       # camera has placed picture earlier than process finished
       return True
-    sleep(0.01)
+    time.sleep(0.01)
 
   if (camera_returncode != 0):
     # communication unsuccessful
