@@ -407,6 +407,7 @@ pygame.font.init() # you have to call this at the start,
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
 # Main loop ----------------------------------------------------------------
+global processingTouch
 
 while True:
     # Redraw Code etc
