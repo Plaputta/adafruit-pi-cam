@@ -179,7 +179,7 @@ buttons = [
   [Button((  20,408,156, 52), bg='gear', cb=viewCallback, value=0),
    Button((624,408,156, 52), bg='play', cb=viewCallback, value=1),
    Button((322, 189, 157, 102)),  # 'Working' label (when enabled)
-   Button((389, 229, 22, 22)),  # Spinner (when enabled)
+   Button((389, 229, 22, 22))]  # Spinner (when enabled)
 
 ]
 
