@@ -6,6 +6,7 @@ import os
 import os.path
 import picamera
 import pygame
+import datetime
 import stat
 import threading
 import time
@@ -299,6 +300,15 @@ def takePicture():
 
   t = threading.Thread(target=spinner)
   t.start()
+
+  picture_name = "hochzeitsblitzer_" + datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + ".jpg"
+  picture_result = GetPictureFromCamera(picture_name, "/home/pi/photobooth/images/")
+  if picture_result:
+    print("cool")
+    Kill(0)
+  else:
+    print("mist")
+    Kill(0)
 
   scaled = None
   camera.resolution = sizeData[sizeMode][0]
