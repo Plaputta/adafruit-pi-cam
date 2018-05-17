@@ -165,15 +165,15 @@ buttons = [
 
   # Screen mode 1 is delete confirmation
   [Button((  0,140,800, 33), bg='delete'),
-   Button(( 336,190,120,100), bg='yn', fg='yes',
+   Button(( 270,190,120,100), bg='yn', fg='yes',
     cb=deleteCallback, value=True),
-   Button((464,190,120,100), bg='yn', fg='no',
+   Button((410,190,120,100), bg='yn', fg='no',
     cb=deleteCallback, value=False)],
 
   # Screen mode 2 is 'No Images'
-  [Button((0,  0,320,240), cb=doneCallback), # Full screen = button
-   Button((0,188,320, 52), bg='done'),       # Fake 'Done' button
-   Button((0, 53,320, 80), bg='empty')],     # 'Empty' message
+  [Button((0,  0,800,480), cb=doneCallback), # Full screen = button
+   Button((240,275,320, 52), bg='done'),       # Fake 'Done' button
+   Button((240, 140,320, 80), bg='empty')],     # 'Empty' message
 
   # Screen mode 3 is viewfinder / snapshot
   [Button((  20,408,156, 52), bg='gear', cb=viewCallback, value=0),
