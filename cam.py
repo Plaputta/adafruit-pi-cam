@@ -409,6 +409,8 @@ myfont = pygame.font.SysFont('Comic Sans MS', 30)
 # Main loop ----------------------------------------------------------------
 global processingTouch
 
+processingTouch = False
+
 while True:
     # Redraw Code etc
     for event in pygame.event.get():
