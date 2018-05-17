@@ -381,10 +381,11 @@ for s in buttons:        # For each screenful of buttons...
 
 
 def touch_handler(event, touch):
-  global blub
+  global processingTouch
   if event == TS_PRESS:
     if touch.valid:
       blub = True
+      time.sleep(0.5)
       textsurface = myfont.render('Some Text', False, (255, 255, 255))
       screen.fill(0)
       screen.blit(textsurface, (0, 0))
@@ -407,7 +408,7 @@ myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
 # Main loop ----------------------------------------------------------------
 
-blub = False
+processingTouch = False
 
 while True:
     # Redraw Code etc
@@ -416,18 +417,23 @@ while True:
         ts.stop()
         Kill(0)
 
-    if blub: continue
+    if processingTouch: continue
 
-    stream = io.BytesIO()  # Capture into in-memory stream
-    camera.capture(stream, use_video_port=True, format='raw')
-    stream.seek(0)
-    stream.readinto(yuv)  # stream -> YUV buffer
-    stream.close()
-    yuv2rgb.convert(yuv, rgb, sizeData[sizeMode][1][0],
-                    sizeData[sizeMode][1][1])
-    img = pygame.image.frombuffer(rgb[0:
-                                      (sizeData[sizeMode][1][0] * sizeData[sizeMode][1][1] * 3)],
-                                  sizeData[sizeMode][1], 'RGB')
+    if screenMode == 3:  # Viewfinder mode
+      stream = io.BytesIO()  # Capture into in-memory stream
+      camera.capture(stream, use_video_port=True, format='raw')
+      stream.seek(0)
+      stream.readinto(yuv)  # stream -> YUV buffer
+      stream.close()
+      yuv2rgb.convert(yuv, rgb, sizeData[sizeMode][1][0],
+                      sizeData[sizeMode][1][1])
+      img = pygame.image.frombuffer(rgb[0:
+                                        (sizeData[sizeMode][1][0] * sizeData[sizeMode][1][1] * 3)],
+                                    sizeData[sizeMode][1], 'RGB')
+    elif screenMode < 2:  # Playback mode or delete confirmation
+      img = scaled  # Show last-loaded image
+    else:  # 'No Photos' mode
+      img = None  # You get nothing, good day sir
 
     if img is None or img.get_height() < 480:  # Letterbox, clear background
       screen.fill(0)
