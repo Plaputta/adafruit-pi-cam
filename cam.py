@@ -104,7 +104,7 @@ def imageCallback(n): # Pass 1 (next image), -1 (prev image) or 0 (delete)
 	  showNextImage(n)
 
 def deleteCallback(n): # Delete confirmation
-	global loadIdx, scaled, screenMode, storeMode
+	global loadIdx, scaled, screenMode, storeMode, screenModePrior
 	screenMode      =  0
 	screenModePrior = -1
 	if n is True:
