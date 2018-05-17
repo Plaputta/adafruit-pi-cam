@@ -10,9 +10,9 @@ import stat
 import threading
 import time
 import yuv2rgb
-import ft5406
+from ft5406 import Touchscreen, TS_PRESS, TS_RELEASE, TS_MOVE
 from pygame.locals import *
-from subprocess import call
+
 
 class Icon:
 
@@ -380,7 +380,21 @@ for s in buttons:        # For each screenful of buttons...
         b.fg     = None
 
 
+def touch_handler(event, touch):
+  if event == TS_PRESS:
+    if touch.valid:
+      for b in buttons[screenMode]:
+        if b.selected(touch.x, touch.y): break
+
+for touch in ts.touches:
+  touch.on_press = touch_handler
+  touch.on_release = touch_handler
+  touch.on_move = touch_handler
+
+ts.run()
+
 # Main loop ----------------------------------------------------------------
+
 
 while(True):
 
@@ -388,16 +402,8 @@ while(True):
   while True:
     for event in pygame.event.get():
       if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+          ts.stop()
           Kill(0)
-    processedTouch = False
-    for touch in ts.poll():
-      if touch.valid:
-        for b in buttons[screenMode]:
-          if b.selected(touch.x, touch.y):
-            processedTouch = True
-            break
-      if processedTouch:
-        break
 
     # If in viewfinder or settings modes, stop processing touchscreen
     # and refresh the display to show the live preview.  In other modes
