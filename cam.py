@@ -200,8 +200,6 @@ buttons = [
 # software's convention (IMG_XXXX.JPG), returning a tuple with the
 # lowest and highest indices (or None if no matching files).
 def imgRange(path):
-  print("mode I")
-  Kill(0)
   min = 9999
   max = 0
   try:
@@ -211,6 +209,10 @@ def imgRange(path):
         if(i < min): min = i
         if(i > max): max = i
   finally:
+    print("mode I")
+    print(min)
+    print(max)
+    Kill(0)
     return None if min > max else (min, max)
 
 # Busy indicator.  To use, run in separate thread, set global 'busy'
