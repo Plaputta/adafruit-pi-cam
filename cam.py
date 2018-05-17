@@ -417,6 +417,7 @@ while(True):
       processingTouch = True
       for b in buttons[screenMode]:
        if b.selected(queuedTouch[0], queuedTouch[1]): break
+      queuedTouch = [-1, -1]
       processingTouch = False
     # If in viewfinder or settings modes, stop processing touchscreen
     # and refresh the display to show the live preview.  In other modes
